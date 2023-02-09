@@ -1,6 +1,6 @@
 import {getServerSession} from "next-auth/next";
-import {PrismaClient} from "@prisma/client";
 import {authOptions} from "./auth/[...nextauth]";
+import {default as prisma} from '../../lib/prismadb';
 
 export default async (req: any, res: any) => {
     const session = await getServerSession(req, res, authOptions);
@@ -11,7 +11,6 @@ export default async (req: any, res: any) => {
         });
         return;
     }
-    const prisma = new PrismaClient();
     const email = session.user?.email as string;
     if (req.method === "GET") {
         const messages = await prisma.message.findMany({
