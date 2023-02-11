@@ -65,7 +65,6 @@ model Message {
   sender          User     @relation("sender", fields: [sender_id], references: [id])
   sender_id       String
   recipient       User     @relation("recipient", fields: [recipient_id], references: [id])
-  recipient       User     @relation("recipient", fields: [recipient_id], references: [id])
   recipient_id    String
   image_hotlink   String?
   video_hotlink   String?
