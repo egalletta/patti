@@ -1,6 +1,7 @@
 import {getServerSession} from "next-auth/next";
 import {authOptions} from "./auth/[...nextauth]";
 import {default as prisma} from '../../lib/prismadb';
+import {getUserFromRequest} from "../../prisma/utils";
 
 export default async (req: any, res: any) => {
     const session = await getServerSession(req, res, authOptions);
@@ -11,12 +12,20 @@ export default async (req: any, res: any) => {
         });
         return;
     }
-    const email = session.user?.email as string;
+    const user = await getUserFromRequest(req);
+    if (user === null) {
+        res.status = 404;
+        res.send();
+        return;
+    }
     if (req.method === "GET") {
         const messages = await prisma.message.findMany({
             where: {
-                sender_email: email,
+                sender_id: user.id,
             },
+            include: {
+                recipient: true
+            }
         });
         res.send({
             messages,

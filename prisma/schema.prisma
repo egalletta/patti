@@ -46,7 +46,7 @@ model User {
   accounts         Account[]
   sessions         Session[]
   sentMessages     Message[] @relation("sender")
-  recievedMessages Message[] @relation("recipient")
+  receivedMessages Message[] @relation("recipient")
 }
 
 model VerificationToken {
@@ -61,10 +61,10 @@ model Message {
   id              String   @id @default(uuid())
   created         DateTime @default(now())
   title           String
-  body            Strinbsg
-  recipient_email String
+  body            String
   sender          User     @relation("sender", fields: [sender_id], references: [id])
   sender_id       String
+  recipient       User     @relation("recipient", fields: [recipient_id], references: [id])
   recipient       User     @relation("recipient", fields: [recipient_id], references: [id])
   recipient_id    String
   image_hotlink   String?
