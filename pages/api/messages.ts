@@ -1,6 +1,7 @@
 import {getServerSession} from "next-auth/next";
-import {PrismaClient} from "@prisma/client";
 import {authOptions} from "./auth/[...nextauth]";
+import {default as prisma} from '../../lib/prismadb';
+import {getUserFromEmail, getUserFromRequest} from "../../prisma/utils";
 
 export default async (req: any, res: any) => {
     const session = await getServerSession(req, res, authOptions);
@@ -11,25 +12,37 @@ export default async (req: any, res: any) => {
         });
         return;
     }
-    const prisma = new PrismaClient();
-    const email = session.user?.email as string;
+    const user = await getUserFromRequest(req);
     if (req.method === "GET") {
+
         const messages = await prisma.message.findMany({
             where: {
-                recipient_email: email,
+                recipient_id: user.id,
             },
+            include: {
+                sender: true
+            }
         });
+        console.log("messages", messages)
         res.send({
             messages,
         });
     } else if (req.method === "POST") {
         const body = JSON.parse(req.body);
+        const recipient = await getUserFromEmail(body.recipient_email);
+        if (recipient === null) {
+            res.status(404);
+            res.send({
+                error: "Recipient does not exist!"
+            });
+            return
+        }
         await prisma.message.create({
             data: {
                 title: body.title,
                 body: body.body,
-                sender_email: email,
-                recipient_email: body.recipient_email,
+                sender_id: user.id,
+                recipient_id: recipient.id,
                 image_hotlink: body.image_hotlink,
                 video_hotlink: body.video_hotlink,
             },

@@ -19,7 +19,7 @@ export function PattiMessages() {
                         <Heading as="h5">{m.title}</Heading>
                         <Text as="h6">
                             {"from "}
-                            {m.sender_email}
+                            {m.sender.email}
                         </Text>
                     </CardHeader>
                     <CardBody>

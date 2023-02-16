@@ -22,10 +22,11 @@
     "@chakra-ui/react": "^2.4.9",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
-    "@prisma/client": "^4.9.0",
+    "@next-auth/prisma-adapter": "^1.0.5",
+    "@prisma/client": "^4.10.0",
     "framer-motion": "^8.5.3",
-    "next": "latest",
-    "next-auth": "latest",
+    "next": "^13.1.6",
+    "next-auth": "^4.19.2",
     "nodemailer": "^6",
     "prettier": "^2.8.3",
     "react": "^18.2.0",
@@ -38,7 +39,7 @@
     "@typescript-eslint/parser": "^5.49.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-typescript": "^17.0.0",
-    "prisma": "^4.9.0",
+    "prisma": "^4.10.0",
     "typescript": "^4"
   }
 }

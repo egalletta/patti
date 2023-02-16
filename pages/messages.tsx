@@ -1,5 +1,17 @@
-import {Box, Button, Divider, FormControl, FormLabel, Heading, Input, SimpleGrid, Textarea,} from "@chakra-ui/react";
-import {useState} from "react";
+import {
+    Alert,
+    AlertIcon,
+    Box,
+    Button,
+    Divider,
+    FormControl,
+    FormLabel,
+    Heading,
+    Input,
+    SimpleGrid,
+    Textarea,
+} from "@chakra-ui/react";
+import {ReactElement, useState} from "react";
 import {useRouter} from "next/router";
 import {SentPattiMessages} from "../components/SentPattiMessages";
 import Layout from "../components/Layout";
@@ -8,11 +20,10 @@ export default function Messages() {
     const [title, setTitle] = useState<string>("");
     const [body, setBody] = useState<string>("");
     const [recipient, setRecipient] = useState<string>("");
-
-    const router = useRouter();
+    const [status, setStatus] = useState<ReactElement>(<></>);
 
     async function createMessage() {
-        await fetch("/api/messages", {
+        const res = await fetch("/api/messages", {
             method: "POST",
             body: JSON.stringify({
                 recipient_email: recipient,
@@ -20,7 +31,17 @@ export default function Messages() {
                 body,
             }),
         });
-        router.reload();
+        if (res.status !== 200) {
+            setStatus(<Alert status='error'>
+                <AlertIcon />
+                User does not exist.
+            </Alert>);
+        } else {
+            setStatus(<Alert status='success'>
+                <AlertIcon />
+                Message Saved.
+            </Alert>);
+        }
     }
 
     return (
@@ -31,6 +52,7 @@ export default function Messages() {
                         New Message
                     </Heading>
                     <Divider/>
+                    {status}
                     <br/>
                     <form>
                         <FormControl>
